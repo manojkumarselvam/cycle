@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Cycles Bike Rental</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+            font-size: 2em;
+        }
+        .bike-selection {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .bike-card {
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 10px;
+            width: 250px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .bike-card img {
+            max-width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+        #rental-form {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            background: #0779e4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #05f;
+        }
+        #total-cost {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🚲 Urban Cycles Bike Rental</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="bike-selection" id="bike-selection">
+            <!-- Bike options will be dynamically added here -->
+        </div>
+
+        <div id="rental-form">
+            <h2>Rent a Bike</h2>
+            <select id="bike-type">
+                <option value="">Select Bike Type</option>
+            </select>
+            <input type="number" id="rental-days" placeholder="Number of Days" min="1">
+            <button onclick="calculateRental()">Calculate Rental Cost</button>
+            <div id="total-cost"></div>
+        </div>
+    </div>
+
+    <script>
+        // Bike data with prices
+        const bikes = [
+            { 
+                type: 'City Bike', 
+                price: 15, 
+                image: 'img/download (1).jpg' 
+            },
+            { 
+                type: 'Mountain Bike', 
+                price: 25, 
+                image: 'img/download.jpg' 
+            },
+            { 
+                type: 'Electric Bike', 
+                price: 35, 
+                image: 'img/images (1).jpg' 
+            },
+            { 
+                type: 'Road Bike', 
+                price: 20, 
+                image: 'img/images.jpg' 
+            }
+        ];
+
+        // Populate bike selection and dropdown
+        function initializeBikes() {
+            const bikeSelection = document.getElementById('bike-selection');
+            const bikeTypeSelect = document.getElementById('bike-type');
+
+            bikes.forEach(bike => {
+                // Create bike card
+                const bikeCard = document.createElement('div');
+                bikeCard.className = 'bike-card';
+                bikeCard.innerHTML = `
+                    <img src="${bike.image}" alt="${bike.type}">
+                    <h3>${bike.type}</h3>
+                    <p>$${bike.price}/day</p>
+                `;
+                bikeSelection.appendChild(bikeCard);
+
+                // Populate dropdown
+                const option = document.createElement('option');
+                option.value = bike.type;
+                option.textContent = `${bike.type} - $${bike.price}/day`;
+                bikeTypeSelect.appendChild(option);
+            });
+        }
+
+        // Calculate rental cost
+        function calculateRental() {
+            const bikeType = document.getElementById('bike-type').value;
+            const rentalDays = document.getElementById('rental-days').value;
+            const totalCostDisplay = document.getElementById('total-cost');
+
+            if (!bikeType || !rentalDays) {
+                totalCostDisplay.textContent = 'Please select a bike and number of days';
+                return;
+            }
+
+            const selectedBike = bikes.find(bike => bike.type === bikeType);
+            const totalCost = selectedBike.price * rentalDays;
+
+            totalCostDisplay.textContent = `Total Cost: $${totalCost} for ${rentalDays} day(s)`;
+        }
+
+        // Initialize when page loads
+        window.onload = initializeBikes;
+    </script>
+</body>
+</html>
